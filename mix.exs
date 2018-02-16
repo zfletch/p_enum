@@ -1,4 +1,4 @@
-defmodule PlEnum.MixProject do
+defmodule PLEnum.MixProject do
   use Mix.Project
 
   def project do

@@ -1,8 +1,8 @@
-defmodule PlEnumTest do
+defmodule PLEnumTest do
   use ExUnit.Case
-  doctest PlEnum
+  doctest PLEnum
 
   test "greets the world" do
-    assert PlEnum.hello() == :world
+    assert PLEnum.hello() == :world
   end
 end

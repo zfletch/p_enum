@@ -1,4 +1,4 @@
-# PlEnum
+# PLEnum
 
 **TODO: Add description**
 

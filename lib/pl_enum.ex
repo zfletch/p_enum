@@ -1,6 +1,6 @@
-defmodule PlEnum do
+defmodule PLEnum do
   @moduledoc """
-  Documentation for PlEnum.
+  Documentation for PLEnum.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule PlEnum do
 
   ## Examples
 
-      iex> PlEnum.hello
+      iex> PLEnum.hello
       :world
 
   """
