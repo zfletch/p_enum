@@ -68,8 +68,8 @@ defmodule PLEnum do
     |> Enum.map(fn ({_, v}) -> v end)
   end
 
-  @spec into(Enumerable.t(), Collectable.t(), (term -> term)) :: Collectable.t()
-  def into(enumerable, collectable, transform) do
+  @spec pinto(Enumerable.t(), Collectable.t(), (term -> term)) :: Collectable.t()
+  def pinto(enumerable, collectable, transform) do
     enumerable
     |> pmap(transform)
     |> Enum.into(collectable)
