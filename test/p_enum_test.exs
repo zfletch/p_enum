@@ -20,10 +20,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pchunk_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pchunk_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.chunk_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.chunk_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -40,10 +41,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pcount([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pcount([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.count([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.count([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -60,10 +62,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pdedup_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pdedup_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.dedup_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.dedup_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -72,13 +75,13 @@ defmodule PEnumTest do
     test "behavior matches Enum" do
       assert PEnum.peach([], fn x -> x end) == :ok
 
-      fun = fn -> PEnum.peach([1, 2, 3], fn (n) -> Logger.error("peach #{n}") end) end
+      fun = fn -> PEnum.peach([1, 2, 3], fn n -> Logger.error("peach #{n}") end) end
       assert capture_log(fun) =~ "peach 1"
       assert capture_log(fun) =~ "peach 2"
       assert capture_log(fun) =~ "peach 3"
 
       assert PEnum.peach(1..0, fn x -> x end) == :ok
-      fun = fn -> PEnum.peach(1..3, fn (n) -> Logger.error("peach #{n}") end) end
+      fun = fn -> PEnum.peach(1..3, fn n -> Logger.error("peach #{n}") end) end
       assert capture_log(fun) =~ "peach 1"
       assert capture_log(fun) =~ "peach 2"
       assert capture_log(fun) =~ "peach 3"
@@ -86,10 +89,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.peach([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.peach([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.each([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.each([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -105,10 +109,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pflat_map([1, 2, 3], fn (_) -> [:timer.sleep(100)] end)
+        PEnum.pflat_map([1, 2, 3], fn _ -> [:timer.sleep(100)] end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.flat_map([1, 2, 3], fn (_) -> [:timer.sleep(100)] end)
+        Enum.flat_map([1, 2, 3], fn _ -> [:timer.sleep(100)] end)
       end)
     end
   end
@@ -133,10 +138,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pfilter([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pfilter([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.filter([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.filter([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -154,13 +160,15 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pgroup_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pgroup_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.group_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.group_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        PEnum.pgroup_by([1, 2, 3], & &1, fn (_) -> :timer.sleep(100) end)
+        PEnum.pgroup_by([1, 2, 3], & &1, fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -178,10 +186,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.group_byp([1, 2, 3], & &1, fn (_) -> :timer.sleep(100) end)
+        PEnum.group_byp([1, 2, 3], & &1, fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.group_by([1, 2, 3], & &1, fn (_) -> :timer.sleep(100) end)
+        Enum.group_by([1, 2, 3], & &1, fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -199,10 +208,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(250, fn ->
-        PEnum.pgroup_byp([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn (_) -> :timer.sleep(100) end)
+        PEnum.pgroup_byp([1, 2, 3], fn _ -> :timer.sleep(100) end, fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.group_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn (_) -> :timer.sleep(100) end)
+        Enum.group_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -222,10 +232,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pinto([1, 2, 3], [], fn (_) -> :timer.sleep(100) end)
+        PEnum.pinto([1, 2, 3], [], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.into([1, 2, 3], [], fn (_) -> :timer.sleep(100) end)
+        Enum.into([1, 2, 3], [], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -241,10 +252,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmap([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pmap([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.map([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.map([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -294,12 +306,14 @@ defmodule PEnumTest do
         PEnum.pmap_every(1..3, -1, fn x -> x * 2 end)
       end
     end
+
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmap_every([1, 2, 3], 1, fn (_) -> :timer.sleep(100) end)
+        PEnum.pmap_every([1, 2, 3], 1, fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.map_every([1, 2, 3], 1, fn (_) -> :timer.sleep(100) end)
+        Enum.map_every([1, 2, 3], 1, fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -320,10 +334,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmap_join([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pmap_join([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.map_join([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.map_join([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -346,18 +361,23 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmax_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pmax_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.max_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
 
   describe "pmax_by/3" do
     test "behavior matches Enum" do
-      assert PEnum.pmax_by(["a", "aa", "aaa"], fn x -> String.length(x) end, fn -> nil end) == "aaa"
-      assert PEnum.pmax_by([], fn x -> String.length(x) end, fn -> :empty_value end) == :empty_value
+      assert PEnum.pmax_by(["a", "aa", "aaa"], fn x -> String.length(x) end, fn -> nil end) ==
+               "aaa"
+
+      assert PEnum.pmax_by([], fn x -> String.length(x) end, fn -> :empty_value end) ==
+               :empty_value
+
       assert PEnum.pmax_by(%{}, & &1, fn -> :empty_value end) == :empty_value
       assert PEnum.pmax_by(%{}, & &1, fn -> {:a, :tuple} end) == {:a, :tuple}
       assert_runs_enumeration_only_once(&PEnum.pmax_by(&1, fn e -> e end, fn -> nil end))
@@ -365,10 +385,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmax_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        PEnum.pmax_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        Enum.max_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
     end
   end
@@ -391,10 +412,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmin_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pmin_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.min_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.min_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -402,7 +424,10 @@ defmodule PEnumTest do
   describe "pmin_by/3" do
     test "behavior matches Enum" do
       assert PEnum.pmin_by(["a", "aa", "aaa"], fn x -> String.length(x) end, fn -> nil end) == "a"
-      assert PEnum.pmin_by([], fn x -> String.length(x) end, fn -> :empty_value end) == :empty_value
+
+      assert PEnum.pmin_by([], fn x -> String.length(x) end, fn -> :empty_value end) ==
+               :empty_value
+
       assert PEnum.pmin_by(%{}, & &1, fn -> :empty_value end) == :empty_value
       assert PEnum.pmin_by(%{}, & &1, fn -> {:a, :tuple} end) == {:a, :tuple}
       assert_runs_enumeration_only_once(&PEnum.pmin_by(&1, fn e -> e end, fn -> nil end))
@@ -410,10 +435,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmin_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        PEnum.pmin_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.min_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        Enum.min_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
     end
   end
@@ -432,10 +458,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmin_max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.pmin_max_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.min_max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.min_max_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -456,10 +483,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.pmin_max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        PEnum.pmin_max_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.min_max_by([1, 2, 3], fn (_) -> :timer.sleep(100) end, fn -> 1 end)
+        Enum.min_max_by([1, 2, 3], fn _ -> :timer.sleep(100) end, fn -> 1 end)
       end)
     end
   end
@@ -476,10 +504,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.preject([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.preject([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.reject([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.reject([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
@@ -493,10 +522,11 @@ defmodule PEnumTest do
 
     test "runs in parallel" do
       assert_time_within(200, fn ->
-        PEnum.puniq_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        PEnum.puniq_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
+
       refute_time_within(200, fn ->
-        Enum.uniq_by([1, 2, 3], fn (_) -> :timer.sleep(100) end)
+        Enum.uniq_by([1, 2, 3], fn _ -> :timer.sleep(100) end)
       end)
     end
   end
