@@ -40,7 +40,7 @@ defmodule PEnum do
   def peach(enumerable, fun) do
     enumerable
     |> Enum.map(fn n -> Task.async(fn -> fun.(n) end) end)
-    |> Enum.each(&Task.await/1)
+    |> Enum.each(fn t -> Task.await(t, :infinity) end)
 
     :ok
   end
@@ -98,14 +98,14 @@ defmodule PEnum do
   def pmap(enumerable, fun) do
     enumerable
     |> Enum.map(fn n -> Task.async(fn -> fun.(n) end) end)
-    |> Enum.map(&Task.await/1)
+    |> Enum.map(fn t -> Task.await(t, :infinity) end)
   end
 
   @spec pmap_every(Enumerable.t(), non_neg_integer, (element -> any)) :: list
   def pmap_every(enumerable, nth, fun) do
     enumerable
     |> Enum.map_every(nth, fn n -> Task.async(fn -> fun.(n) end) end)
-    |> Enum.map_every(nth, &Task.await/1)
+    |> Enum.map_every(nth, fn t -> Task.await(t, :infinity) end)
   end
 
   @spec pmap_join(Enumerable.t(), String.t(), (element -> String.Chars.t())) :: String.t()
