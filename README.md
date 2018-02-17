@@ -2,10 +2,10 @@
 
 Parallel `Enum`. This library provides a set of functions similar to the
 ones in the [Enum](https://hexdocs.pm/elixir/Enum.html) module except that
-the function is executed on each element parallel.
+the function argument is executed on each element in parallel.
 
-The behavior of each of the functions should be the same as the `Enum` varieties,
-except that order of execution is not guaranteed.
+The behavior of each of the `PEnum` functions should be the same as the `Enum`
+varieties, except that order of execution is not guaranteed.
 
 Except where otherwise noted, the function names are identical to the ones in
 `Enum` but with a `p` in front. For example, `PEnum.pmap` is a parallel version of
@@ -13,7 +13,7 @@ Except where otherwise noted, the function names are identical to the ones in
 
 ## Installation
 
-It is [available in Hex](https://hex.pm/docs/publish) and package can be installed
+It is [available in Hex](https://hex.pm/packages/p_enum) and package can be installed
 by adding `p_enum` to your list of dependencies in `mix.exs`:
 
 ```elixir
@@ -73,11 +73,12 @@ end
 * `preject/2`
 * `puniq_by/2`
 
-#### Group by family
+#### The group\_by family of functions
 
 The `Enum.group_by` function takes two functions as arguments:
 a `key_fun` and a `value_fun`. Since someone may want to run either
-or both in parallel, there are three `PEnum` functions:
+or both in parallel, there are three `PEnum` functions corresponding
+to `Enum.group_by`:
 
 * `pgroup_by` - runs only `key_fun` in parallel
 * `group_byp` - runs only `value_fun` in parallel
