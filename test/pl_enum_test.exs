@@ -1,5 +1,8 @@
 defmodule PLEnumTest do
   use ExUnit.Case
+  import ExUnit.CaptureLog
+  require Logger
+
   doctest PLEnum
 
   test "pchunk_by/2" do
@@ -33,28 +36,18 @@ defmodule PLEnumTest do
   end
 
   test "peach/2" do
-    try do
-      assert PLEnum.peach([], fn x -> x end) == :ok
-      assert PLEnum.peach([1, 2, 3], fn x -> Process.put(:enum_test_each, x * 2) end) == :ok
-      assert Process.get(:enum_test_each) == 6
-    after
-      Process.delete(:enum_test_each)
-    end
+    assert PLEnum.peach([], fn x -> x end) == :ok
 
-    try do
-      assert PLEnum.peach(1..0, fn x -> x end) == :ok
-      assert PLEnum.peach(1..3, fn x -> Process.put(:enum_test_each, x * 2) end) == :ok
-      assert Process.get(:enum_test_each) == 6
-    after
-      Process.delete(:enum_test_each)
-    end
+    fun = fn -> PLEnum.peach([1, 2, 3], fn (n) -> Logger.error("peach #{n}") end) end
+    assert capture_log(fun) =~ "peach 1"
+    assert capture_log(fun) =~ "peach 2"
+    assert capture_log(fun) =~ "peach 3"
 
-    try do
-      assert PLEnum.peach(-1..-3, fn x -> Process.put(:enum_test_each, x * 2) end) == :ok
-      assert Process.get(:enum_test_each) == -6
-    after
-      Process.delete(:enum_test_each)
-    end
+    assert PLEnum.peach(1..0, fn x -> x end) == :ok
+    fun = fn -> PLEnum.peach(1..3, fn (n) -> Logger.error("peach #{n}") end) end
+    assert capture_log(fun) =~ "peach 1"
+    assert capture_log(fun) =~ "peach 2"
+    assert capture_log(fun) =~ "peach 3"
   end
 
   test "pflat_map/2" do
@@ -83,40 +76,40 @@ defmodule PLEnumTest do
   end
 
   test "pgroup_by/3" do
+    assert PLEnum.pgroup_by([], fn _ -> raise "oops" end) == %{}
+    assert PLEnum.pgroup_by([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
+
     assert PLEnum.pgroup_by(1..6, &rem(&1, 3)) == %{0 => [3, 6], 1 => [1, 4], 2 => [2, 5]}
 
     assert PLEnum.pgroup_by(1..6, &rem(&1, 3), &(&1 * 2)) ==
              %{0 => [6, 12], 1 => [2, 8], 2 => [4, 10]}
-
-    assert PLEnum.pgroup_by([], fn _ -> raise "oops" end) == %{}
-    assert PLEnum.pgroup_by([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
   end
 
   test "group_byp/3" do
+    assert PLEnum.group_byp([], fn _ -> raise "oops" end) == %{}
+    assert PLEnum.group_byp([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
+
     assert PLEnum.group_byp(1..6, &rem(&1, 3)) == %{0 => [3, 6], 1 => [1, 4], 2 => [2, 5]}
 
     assert PLEnum.group_byp(1..6, &rem(&1, 3), &(&1 * 2)) ==
              %{0 => [6, 12], 1 => [2, 8], 2 => [4, 10]}
-
-    assert PLEnum.group_byp([], fn _ -> raise "oops" end) == %{}
-    assert PLEnum.group_byp([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
   end
 
   test "pgroup_byp/3" do
+    assert PLEnum.pgroup_byp([], fn _ -> raise "oops" end) == %{}
+    assert PLEnum.pgroup_byp([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
+
     assert PLEnum.pgroup_byp(1..6, &rem(&1, 3)) == %{0 => [3, 6], 1 => [1, 4], 2 => [2, 5]}
 
     assert PLEnum.pgroup_byp(1..6, &rem(&1, 3), &(&1 * 2)) ==
              %{0 => [6, 12], 1 => [2, 8], 2 => [4, 10]}
-
-    assert PLEnum.pgroup_byp([], fn _ -> raise "oops" end) == %{}
-    assert PLEnum.pgroup_byp([1, 2, 3], &rem(&1, 2)) == %{0 => [2], 1 => [1, 3]}
   end
 
   test "pinto/3" do
     assert PLEnum.pinto([1, 2, 3], [], fn x -> x * 2 end) == [2, 4, 6]
     assert PLEnum.pinto([1, 2, 3], "numbers: ", &to_string/1) == "numbers: 123"
 
-    assert_raise FunctionClauseError, fn ->
+    assert_raise ArgumentError, fn ->
       PLEnum.pinto([2, 3], %{a: 1}, & &1)
     end
 
@@ -193,11 +186,11 @@ defmodule PLEnumTest do
   test "pmax_by/2" do
     assert PLEnum.pmax_by(["a", "aa", "aaa"], fn x -> String.length(x) end) == "aaa"
 
-    assert_raise PLEnum.pEmptyError, fn ->
+    assert_raise Enum.EmptyError, fn ->
       PLEnum.pmax_by([], fn x -> String.length(x) end)
     end
 
-    assert_raise PLEnum.pEmptyError, fn ->
+    assert_raise Enum.EmptyError, fn ->
       PLEnum.pmax_by(%{}, & &1)
     end
 
@@ -216,11 +209,11 @@ defmodule PLEnumTest do
   test "pmin_by/2" do
     assert PLEnum.pmin_by(["a", "aa", "aaa"], fn x -> String.length(x) end) == "a"
 
-    assert_raise PLEnum.pEmptyError, fn ->
+    assert_raise Enum.EmptyError, fn ->
       PLEnum.pmin_by([], fn x -> String.length(x) end)
     end
 
-    assert_raise PLEnum.pEmptyError, fn ->
+    assert_raise Enum.EmptyError, fn ->
       PLEnum.pmin_by(%{}, & &1)
     end
 
@@ -239,7 +232,7 @@ defmodule PLEnumTest do
   test "pmin_max_by/2" do
     assert PLEnum.pmin_max_by(["aaa", "a", "aa"], fn x -> String.length(x) end) == {"a", "aaa"}
 
-    assert_raise PLEnum.pEmptyError, fn ->
+    assert_raise Enum.EmptyError, fn ->
       PLEnum.pmin_max_by([], fn x -> String.length(x) end)
     end
 
