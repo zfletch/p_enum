@@ -1,6 +1,6 @@
-defmodule PLEnum do
+defmodule PEnum do
   @moduledoc """
-  Documentation for PLEnum.
+  Documentation for PEnum.
   """
 
   @type element :: any
