@@ -1,6 +1,15 @@
 defmodule PEnum do
   @moduledoc """
-  Documentation for PEnum.
+  Parallel `Enum`. This library provides a set of functions similar to the
+  ones in the [Enum](https://hexdocs.pm/elixir/Enum.html) module except that
+  the function is executed on each element parallel.
+
+  The behavior of each of the functions should be the same as the `Enum` varieties,
+  except that order of execution is not guaranteed.
+
+  Except where otherwise noted, the function names are identical to the ones in
+  `Enum` but with a `p` in front. For example, `PEnum.pmap` is a parallel version of
+  `Enum.map`.
   """
 
   @type element :: any
